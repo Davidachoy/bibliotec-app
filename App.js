@@ -3,7 +3,9 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/loginScreen";
-import MenuScreen from "./screens/admin/menuScreen";
+import registerScreen from "./screens/registerScreen";
+import AdminMenuScreen from "./screens/admin/adminMenuScreen";
+import UserMenuScreen from "./screens/user/userMenuScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -18,8 +20,22 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="MenuAdmin"
-          component={MenuScreen}
+          name="AdminMenuScreen"
+          component={AdminMenuScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UserMenuScreen"
+          component={UserMenuScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="registerScreen"
+          component={registerScreen}
           options={{
             headerShown: false,
           }}
