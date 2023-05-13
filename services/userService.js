@@ -1,6 +1,13 @@
 import React from "react";
 import { db } from "../database/firebase-config";
-import { getDocs, collection, query, where } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  query,
+  where,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 const usuariosCollectionRef = collection(db, "usuarios");
 
 const userService = {
@@ -47,6 +54,33 @@ const userService = {
     correo,
     contraseña
   ) {},
+  async getStudents() {
+    try {
+      const q = query(
+        usuariosCollectionRef,
+        where("eliminado", "==", false),
+        where("admin", "==", false)
+      );
+      const querySnapshot = await getDocs(q);
+      const usuarios = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return usuarios;
+    } catch (error) {
+      console.error("Error al traer usuarios: ", error);
+    }
+  },
+  async deleteStudent(id) {
+    try {
+      const usuaroDoc = doc(db, "usuarios", id);
+      await updateDoc(usuaroDoc, { eliminado: true });
+      return true;
+    } catch (error) {
+      console.error("Error al borrar usuario: ", error);
+    }
+  },
 };
 
 export default userService;

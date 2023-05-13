@@ -6,8 +6,9 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
+  Image,
 } from "react-native";
-
+import tecLogo from "../assets/logo-tec.png";
 import userService from "../services/userService";
 const LoginScreen = ({ navigation }) => {
   const [correo, setCorreo] = useState("");
@@ -17,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     const lowerCaseEmail = correo.toLowerCase();
     try {
-      const loginResult = await userService.signIn(lowerCaseEmail, contraseña);
+      const loginResult = await userService.signIn("admin@itcr.cr", "123");
       if (loginResult.success) {
         if (loginResult.isAdmin) {
           navigation.navigate("AdminMenuScreen"); // Navegar a la pantalla de administrador
@@ -32,12 +33,17 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleRegister = () => {
-    navigation.navigate("registerScreen");
+    navigation.navigate("RegisterScreen");
   };
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
+        <Image
+          style={{ width: "100%" }}
+          source={tecLogo}
+          resizeMode="contain"
+        ></Image>
         <Text style={styles.title}>Iniciar sesión</Text>
         <TextInput
           onChangeText={setCorreo}
@@ -65,7 +71,6 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
     paddingHorizontal: 20,
     height: "100%",
   },

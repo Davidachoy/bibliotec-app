@@ -18,9 +18,9 @@ const AdminMenuScreen = ({ navigation }) => {
         <Text style={styles.title}>Menú de Administrador</Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("Opción1")}
+          onPress={() => handleButtonPress("StudentDashboardScreen")}
         >
-          <Text style={styles.buttonText}>Opción 1</Text>
+          <Text style={styles.buttonText}>Gestion de estudiantes</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
