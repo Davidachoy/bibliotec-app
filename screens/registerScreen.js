@@ -11,6 +11,8 @@ import { db } from "../database/firebase-config";
 import { addDoc, collection } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+import userService from "../services/userService";
+
 const RegisterScreen = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
