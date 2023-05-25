@@ -29,7 +29,7 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="UserMenuScreen"
+          name="userMenuScreen"
           component={UserMenuScreen}
           options={{
             headerShown: false,
