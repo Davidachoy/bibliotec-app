@@ -6,6 +6,8 @@ import LoginScreen from "./screens/loginScreen";
 import RegisterScreen from "./screens/registerScreen";
 import AdminMenuScreen from "./screens/admin/adminMenuScreen";
 import UserMenuScreen from "./screens/user/userMenuScreen";
+import UserReservationsScreen from "./screens/user/userReservationsScreen";
+import UserReservationInfoScreen from "./screens/user/userReservationInfoScreen";
 import StudentDetailScreen from "./screens/admin/studentDetailScreen";
 import StudentDashboardScreen from "./screens/admin/studentDashboardScreen";
 const Stack = createNativeStackNavigator();
@@ -29,8 +31,22 @@ export default function App() {
           }}
         />
         <Stack.Screen
-          name="userMenuScreen"
+          name="UserMenuScreen"
           component={UserMenuScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UserReservationScreen"
+          component={UserReservationsScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UserReservationInfoScreen"
+          component={UserReservationInfoScreen}
           options={{
             headerShown: false,
           }}

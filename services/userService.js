@@ -8,7 +8,10 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import qrcode from 'qrcode';
+import emailjs from 'emailjs-com';
 const usuariosCollectionRef = collection(db, "usuarios");
+const reservationsCollectionRef = collection(db, "reservaciones");
 
 const userService = {
   async signIn(email, password) {
@@ -72,6 +75,24 @@ const userService = {
       console.error("Error al traer usuarios: ", error);
     }
   },
+  async getUser(email, password) {
+    try {
+      var user = {};
+      const data = await getDocs(usuariosCollectionRef);
+      const usuarios = data.docs
+      .map((doc) => ({ ...doc.data(), id: doc.id }))
+      .filter((user) => !user.eliminado);
+      for(let i in usuarios){
+        if (usuarios[i].correo == email && usuarios[i].contraseña == password){
+          user = {id: usuarios[i].id, nombre: usuarios[i].nombre, apellido1: usuarios[i].apellido, apellido2: usuarios[i].segundoApellido, carnee: usuarios[i].carnee};
+          break;
+        }
+      }
+      return user;
+    } catch (error) {
+      console.error("Error al traer usuarios: ", error);
+    }
+  },
   async deleteStudent(id) {
     try {
       const usuaroDoc = doc(db, "usuarios", id);
@@ -81,6 +102,58 @@ const userService = {
       console.error("Error al borrar usuario: ", error);
     }
   },
+
+  async deleteReservation(id) {
+    try {
+      const usuaroDoc = doc(db, "reservaciones", id);
+      await updateDoc(usuaroDoc, { activa: false });
+      return true;
+    } catch (error) {
+      console.error("Error al borrar reservacion: ", error);
+    }
+  },
+
+  async confirmReservation(id) {
+    try {
+      const usuaroDoc = doc(db, "reservaciones", id);
+      await updateDoc(usuaroDoc, { confirmada: true });
+      return true;
+    } catch (error) {
+      console.error("Error al confirmar reservacion: ", error);
+    }
+  },
+
+  async sendEmail(qrcodeData,hora,horaFinal,cubiculo,fecha,nombre,correo) {
+    const emailParams = {
+      to_name: nombre,
+      qrimagen: qrcodeData,
+      cliente: correo,
+      hora: hora,
+      horaFinal: horaFinal,
+      cubiculo: cubiculo,
+      fecha: fecha
+    };
+    emailjs.send("service_719vdkn", "template_6rmafow",emailParams, "NUDhBCc5PbaQ9mPz3")
+    .then(function(response) {
+        console.log("SUCCESS", response);
+    }, function(error) {
+        console.log("FAILED", error);
+    });
+  },
+
+  async getApartadosUser(student)  {
+    try{
+      const data = await getDocs(reservationsCollectionRef);
+      const apartados = data.docs
+      .map((doc) => ({ ...doc.data(), id: doc.id }))
+      .filter((apartado) => apartado.activa && !apartado.confirmada && apartado.carnee==student);
+      console.log(apartados);
+      return apartados;
+    } catch (error) {
+      console.error("Error al buscar apartados de usuario: ", error);
+      throw error;
+    }
+  }
 };
 
 export default userService;

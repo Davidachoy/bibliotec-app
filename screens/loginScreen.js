@@ -23,7 +23,15 @@ const LoginScreen = ({ navigation }) => {
         if (loginResult.isAdmin) {
           navigation.navigate("AdminMenuScreen"); // Navegar a la pantalla de administrador
         } else {
-          navigation.navigate("userMenuScreen"); // Navegar a la pantalla de cliente
+          const estudiante = await userService.getUser(correo, contraseña);
+          data = {
+            id: estudiante.id,
+            nombre: estudiante.nombre,
+            apellido1: estudiante.apellido1,
+            apellido2: estudiante.apellido2,
+            carnee: estudiante.carnee
+          };
+          navigation.navigate("UserMenuScreen",{ studentData: data }); // Navegar a la pantalla de cliente
         }
       } else {
       }

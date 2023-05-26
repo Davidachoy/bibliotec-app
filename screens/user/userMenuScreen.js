@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,10 +9,17 @@ import {
 import { Button, NativeBaseProvider } from "native-base";
 
 
-const UserMenuScreen = ({navigation}) => {
+const UserMenuScreen = ({route, navigation}) => {
 
-  const handleButtonPress = (route) =>{
-    navigation.navigate(route);
+  const { studentData } = route.params;
+  console.log(studentData);
+  const studentID = studentData.id;
+  const studentName = studentData.nombre;
+  const studentLastName = studentData.apellido;
+  const [searchText, setSearchText] = useState("");
+
+  const handleButtonPress = (route,params) =>{
+    navigation.navigate(route, { ...params });
   };
   return(
     <NativeBaseProvider>
@@ -29,7 +36,7 @@ const UserMenuScreen = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("StudentDashboardScreen")}
+          onPress={() => handleButtonPress("UserReservationScreen", { studentData: studentData })}
         >
           <Text style={styles.buttonText}>Lista de Apartados</Text>
         </TouchableOpacity>
