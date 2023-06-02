@@ -12,6 +12,7 @@ import qrcode from 'qrcode';
 import emailjs from 'emailjs-com';
 const usuariosCollectionRef = collection(db, "usuarios");
 const reservationsCollectionRef = collection(db, "reservaciones");
+const cubiculosCollectionRef = collection(db,"cubiculos")
 
 const userService = {
   async signIn(email, password) {
@@ -153,7 +154,21 @@ const userService = {
       console.error("Error al buscar apartados de usuario: ", error);
       throw error;
     }
+  },
+
+  async getCubiculos()  {
+  try{
+    const data = await getDocs(cubiculosCollectionRef);
+    const cubiculos = data.docs
+      .map((doc) => ({ ...doc.data(), id: doc.id }))
+      .filter((cubiculos) => !cubiculos.eliminado);
+    console.log(cubiculos)
+    return cubiculos
+  } catch (error) {
+    console.error("Error al buscar los cubiculos: ", error);
+    throw error;
   }
+}
 };
 
 export default userService;
