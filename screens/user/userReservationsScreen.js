@@ -14,7 +14,6 @@ import { useFocusEffect } from "@react-navigation/native";
 function userReservationScreen({ route, navigation }) {
     const [reservations, setReservations] = useState([]);
     const { studentData } = route.params;
-    console.log(studentData);
     const studentID = studentData.id;
     const studentIdentification = studentData.carnee;
     const studentName = studentData.nombre;
