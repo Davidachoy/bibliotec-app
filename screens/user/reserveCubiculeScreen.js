@@ -9,13 +9,17 @@ import {
 import { Button, NativeBaseProvider } from "native-base";
 import {DatePicker} from 'react-native-datepicker';
 
-const reserveScreen = ({ navigation }) => {
+const reserveScreen = ({ route, navigation }) => {
     /*const [correo, setCorreo] = useState("");
     const [contraseña, setContraseña] = useState("");
     const [usuarios, setUsuarios] = useState([]);*/
 
     const [capacidad, setCapacidad] = useState("");
     const [serviciosEspeciales, setServicios] = ("");  
+
+    const {studentData, reservationData} = route.params;
+    
+
 
     return (
     <NativeBaseProvider>  
