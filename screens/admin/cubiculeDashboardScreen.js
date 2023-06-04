@@ -31,8 +31,8 @@ const CubiculeDashboardScreen = ({ navigation }) => {
       capacidad={item.capacidad}
       tipo={item.tipo}
       onPress={() =>
-          navigation.navigate("", {})
-        }
+        navigation.navigate("CubiculeDetailScreen", { cubiculeData: item })
+      }
     />
   );
   const handleButtonPress = (route, params) => {

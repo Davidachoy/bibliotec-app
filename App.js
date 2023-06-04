@@ -11,6 +11,7 @@ import UserReservationInfoScreen from "./screens/user/userReservationInfoScreen"
 import StudentDetailScreen from "./screens/admin/studentDetailScreen";
 import StudentDashboardScreen from "./screens/admin/studentDashboardScreen";
 import CubiculeDashboardScreen from "./screens/admin/cubiculeDashboardScreen";
+import CubiculeDetailScreen from "./screens/admin/cubiculeDetailScreen";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -80,6 +81,15 @@ export default function App() {
           options={{
             headerShown: false,
           }}
+          
+          />
+             <Stack.Screen
+          name="CubiculeDetailScreen"
+          component={CubiculeDetailScreen}
+          options={{
+            headerShown: false,
+          }}
+          
           />
       </Stack.Navigator>
     </NavigationContainer>

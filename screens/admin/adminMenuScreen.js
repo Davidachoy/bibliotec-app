@@ -24,13 +24,13 @@ const AdminMenuScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("Opción2")}
+          onPress={() => handleButtonPress("CubiculeDashboardScreen")}
         >
           <Text style={styles.buttonText}>Gestion de cubiculos</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("CubiculeDashboardScreen")}
+          onPress={() => handleButtonPress("Opción3")}
         >
           <Text style={styles.buttonText}>Opción 3</Text>
         </TouchableOpacity>

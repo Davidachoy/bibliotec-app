@@ -168,7 +168,16 @@ const userService = {
     console.error("Error al buscar los cubiculos: ", error);
     throw error;
   }
-}
+},
+async deleteCubicule(id) {
+  try {
+    const usuaroDoc = doc(db, "cubiculo", id);
+    await updateDoc(usuaroDoc, { eliminado: true });
+    return true;
+  } catch (error) {
+    console.error("Error al borrar usuario: ", error);
+  }
+},
 };
 
 export default userService;
