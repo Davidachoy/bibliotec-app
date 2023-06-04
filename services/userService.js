@@ -169,6 +169,21 @@ const userService = {
     }
   },
 
+  async getCubiculos()  {
+    try{
+      const data = await getDocs(cubiculosCollectionRef);
+      const cubiculos = data.docs
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter((cubiculos) => !cubiculos.eliminado);
+      console.log(cubiculos)
+      return cubiculos
+    } catch (error) {
+      console.error("Error al buscar los cubiculos: ", error);
+      throw error;
+    }
+  },
+
+
   async getApartadosNumber(number)  {
     try{
       const data = await getDocs(reservationsCollectionRef);
