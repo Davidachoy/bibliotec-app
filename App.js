@@ -10,6 +10,8 @@ import UserReservationsScreen from "./screens/user/userReservationsScreen";
 import UserReservationInfoScreen from "./screens/user/userReservationInfoScreen";
 import StudentDetailScreen from "./screens/admin/studentDetailScreen";
 import StudentDashboardScreen from "./screens/admin/studentDashboardScreen";
+import reserveCubiculeScreen from "./screens/user/reserveCubiculeScreen";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -68,6 +70,13 @@ export default function App() {
         <Stack.Screen
           name="StudentDetailScreen"
           component={StudentDetailScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="reserveCubiculeScreen"
+          component={reserveCubiculeScreen}
           options={{
             headerShown: false,
           }}

@@ -29,7 +29,7 @@ const UserMenuScreen = ({route, navigation}) => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("StudentDashboardScreen")}
+          onPress={() => handleButtonPress("reserveCubiculeScreen")}
         >
           <Text style={styles.buttonText}>Apartar un Cubículo</Text>
         </TouchableOpacity>
@@ -55,7 +55,6 @@ const UserMenuScreen = ({route, navigation}) => {
           <Text style={styles.buttonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
 
-        <Button>Click Me</Button>
 
       </View>
     </SafeAreaView>
