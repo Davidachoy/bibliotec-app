@@ -16,12 +16,8 @@ const CubiculeDetailScreen = ({ route, navigation }) => {
     navigation.navigate(route);
   };
 
-  const deleteStudent = async () => {
-    const studentDeleted = userService.deleteStudent(studenData.id);
-    if (studentDeleted) {
-      console.log("estudiante eliminado con exito");
-      navigation.navigate("StudentDashboardScreen");
-    }
+  const deleteCubicule= async () => {
+ // falta de hacer
   };
 
   return (
