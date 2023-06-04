@@ -9,35 +9,56 @@ import {
   TextInput,
 } from "react-native";
 import userService from "../../services/userService";
-import qrcode from 'qrcode';
+import QRCode from 'react-native-qrcode-svg';
+import { encode as base64Encode } from 'base-64';
 
 const userReservationInfoScreen = ({ route, navigation }) => {
   const { studentData, reservationData } = route.params;
+  console.log(studentData);
+  console.log(reservationData);
   const [qrContent, setQrContent] = useState('');
-  const handleButtonPress = (route) => {
-    navigation.navigate(route);
+
+  
+  const handleButtonPress = (route, params) => {
+    navigation.navigate(route, { ...params });
   };
 
   const cancelReservation = async () =>{
-    userService.cancelReservation(reservationData.id);
+    userService.deleteReservation(reservationData.id);
     navigation.navigate("UserReservationScreen", {studentData: studentData});
   };
 
-  const confirmReservation = async () =>{
+  const callEmail = async (qrcodeData,hora,horaFinal,cubiculo,fecha) =>{
+    console.log('enviando');
+    userService.sendEmail(qrcodeData,hora,horaFinal,cubiculo,fecha,studentData.nombre,studentData.correo);
+    navigation.navigate("UserReservationScreen", {studentData: studentData});
+  };
+
+
+  const callConfirm = async () =>{
     userService.confirmReservation(reservationData.id);
     const data = `ID de reserva: ${reservationData.id}\nFecha: ${((reservationData.hora).toDate()).toLocaleDateString()}\nHora de Inicio: ${((reservationData.hora).toDate()).toLocaleTimeString([],{ hour: 'numeric', minute: 'numeric', hour12: true })}\nHora de Fin: ${((reservationData.horaFinal).toDate()).toLocaleTimeString([],{ hour: 'numeric', minute: 'numeric', hour12: true })}\nCarnee: ${reservationData.carnee}`;
-    const qrCodeUrl = await qrcode.toDataURL(data);
-    setQrContent(qrCodeUrl);
+    console.log('datos creados');
+
+    const qrCodeSize = 200; // Adjust the size of the QR code as needed
+
+    const qrCodeSvg = (
+      <QRCode
+        value={data}
+        backgroundColor='#FFFFFF'
+        color='#000000'
+        size={qrCodeSize}
+      />
+    );
+
+    //const qrCodeUrl = await QRCode.toDataURL(data);
+    console.log('qr creado');
+    setQrContent(qrCodeSvg);
     var hora = ((reservationData.hora).toDate()).toLocaleTimeString([],{ hour: 'numeric', minute: 'numeric', hour12: true })
     var horaFinal= ((reservationData.horaFinal).toDate()).toLocaleTimeString([],{ hour: 'numeric', minute: 'numeric', hour12: true })
     var cubiculo = reservationData.cubiculo
     var fecha = ((reservationData.hora).toDate()).toLocaleDateString()
-    callEmail(qrCodeUrl,hora,horaFinal,cubiculo,fecha);
-  };
-
-  const callEmail = async (qrcodeData,hora,horaFinal,cubiculo,fecha) =>{
-    userService.sendEmail(qrcodeData,hora,horaFinal,cubiculo,fecha,studenData.nombre,studenData.correo);
-    navigation.navigate("UserReservationScreen", {studentData: studentData});
+    callEmail(qrCodeSvg,hora,horaFinal,cubiculo,fecha);
   };
 
   return (
@@ -55,7 +76,7 @@ const userReservationInfoScreen = ({ route, navigation }) => {
         <Text style={styles.textBold}>
           Fin: <Text style={styles.text}>{((reservationData.horaFinal).toDate()).toLocaleTimeString([],{ hour: 'numeric', minute: 'numeric', hour12: true })}</Text>
         </Text>
-        <TouchableOpacity style={styles.button} onPress={() => confirmReservation()}>
+        <TouchableOpacity style={styles.button} onPress={() => callConfirm()}>
           <Text style={styles.buttonText}>Confirmar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => cancelReservation()}>
@@ -63,7 +84,7 @@ const userReservationInfoScreen = ({ route, navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("UserReservationsScreen", {studentData: studentData})}
+          onPress={() => handleButtonPress("UserReservationScreen", {studentData: studentData})}
         >
           <Text style={styles.buttonText}>Atras</Text>
         </TouchableOpacity>

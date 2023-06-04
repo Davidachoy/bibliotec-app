@@ -12,7 +12,6 @@ import qrcode from 'qrcode';
 import emailjs from 'emailjs-com';
 const usuariosCollectionRef = collection(db, "usuarios");
 const reservationsCollectionRef = collection(db, "reservaciones");
-const cubiculosCollectionRef = collection(db,"cubiculos")
 
 const userService = {
   async signIn(email, password) {
@@ -156,28 +155,33 @@ const userService = {
     }
   },
 
-  async getCubiculos()  {
-  try{
-    const data = await getDocs(cubiculosCollectionRef);
-    const cubiculos = data.docs
+  async getApartados()  {
+    try{
+      const data = await getDocs(reservationsCollectionRef);
+      const apartados = data.docs
       .map((doc) => ({ ...doc.data(), id: doc.id }))
-      .filter((cubiculos) => !cubiculos.eliminado);
-    console.log(cubiculos)
-    return cubiculos
-  } catch (error) {
-    console.error("Error al buscar los cubiculos: ", error);
-    throw error;
+      .filter((apartado) => apartado.activa && !apartado.confirmada);
+      console.log(apartados);
+      return apartados;
+    } catch (error) {
+      console.error("Error al buscar apartados de usuario: ", error);
+      throw error;
+    }
+  },
+
+  async getApartadosNumber(number)  {
+    try{
+      const data = await getDocs(reservationsCollectionRef);
+      const apartados = data.docs
+      .map((doc) => ({ ...doc.data(), id: doc.id }))
+      .filter((apartado) => apartado.activa && !apartado.confirmada && apartado.cubiculo.includes(number));
+      console.log(apartados);
+      return apartados;
+    } catch (error) {
+      console.error("Error al buscar apartados de usuario: ", error);
+      throw error;
+    }
   }
-},
-async deleteCubicule(id) {
-  try {
-    const usuaroDoc = doc(db, "cubiculo", id);
-    await updateDoc(usuaroDoc, { eliminado: true });
-    return true;
-  } catch (error) {
-    console.error("Error al borrar usuario: ", error);
-  }
-},
 };
 
 export default userService;

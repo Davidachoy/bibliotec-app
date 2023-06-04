@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "./screens/loginScreen";
 import RegisterScreen from "./screens/registerScreen";
 import AdminMenuScreen from "./screens/admin/adminMenuScreen";
+import ReservationsManagementScreen from "./screens/admin/reservationsManagementScreen";
+import ReservationInfoScreen from "./screens/admin/reservationInfoScreen";
 import UserMenuScreen from "./screens/user/userMenuScreen";
 import UserReservationsScreen from "./screens/user/userReservationsScreen";
 import UserReservationInfoScreen from "./screens/user/userReservationInfoScreen";
@@ -13,7 +15,6 @@ import StudentDashboardScreen from "./screens/admin/studentDashboardScreen";
 import CubiculeDashboardScreen from "./screens/admin/cubiculeDashboardScreen";
 import CubiculeDetailScreen from "./screens/admin/cubiculeDetailScreen";
 const Stack = createNativeStackNavigator();
-
 export default function App() {
   return (
     <NavigationContainer>
@@ -28,6 +29,20 @@ export default function App() {
         <Stack.Screen
           name="AdminMenuScreen"
           component={AdminMenuScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ReservationsManagementScreen"
+          component={ReservationsManagementScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ReservationInfoScreen"
+          component={ReservationInfoScreen}
           options={{
             headerShown: false,
           }}

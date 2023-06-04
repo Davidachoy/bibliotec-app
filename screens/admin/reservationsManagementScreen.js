@@ -11,19 +11,15 @@ import {
 import userService from "../../services/userService";
 import { useFocusEffect } from "@react-navigation/native";
 
-function userReservationScreen({ route, navigation }) {
+function reservationsManagementScreen({ route, navigation }) {
     const [reservations, setReservations] = useState([]);
-    const { studentData } = route.params;
-    const studentID = studentData.id;
-    const studentIdentification = studentData.carnee;
-    const studentName = studentData.nombre;
-    const studentLastName = studentData.apellido1;
-    const student2NDLastName = studentData.apellido2
+    const [filtro, setFiltro] = useState('');
   
-    const Item = ({ id, cubiculo, fecha, onPress }) => (
+    const Item = ({ id, cubiculo, fecha, carnee, onPress }) => (
       <TouchableOpacity onPress={onPress} style={styles.item}>
-        <Text style={styles.itemText}>Cubículo: {cubiculo}</Text>
+        <Text style={styles.itemText}>#: {cubiculo}</Text>
         <Text style={styles.itemText}>Fecha: {fecha} </Text>
+        <Text style={styles.itemText}>Carnee: {carnee} </Text>
       </TouchableOpacity>
     );
 
@@ -31,8 +27,9 @@ function userReservationScreen({ route, navigation }) {
       <Item
         cubiculo={item.cubiculo}
         fecha={((item.hora).toDate()).toLocaleDateString()}
+        carnee={item.carnee}
         onPress={() =>
-          navigation.navigate("UserReservationInfoScreen", { studentData: studentData ,reservationData: item })
+          navigation.navigate("ReservationInfoScreen", { reservationData: item })
         }
       />
     );
@@ -40,23 +37,50 @@ function userReservationScreen({ route, navigation }) {
       navigation.navigate(route, { ...params });
     };
   
-    const getReservations = async (id) => {
-      const reservations = await userService.getApartadosUser(id);
+    const getReservations = async () => {
+      const reservations = await userService.getApartados();
       setReservations(reservations);
       console.log(reservations);
     };
   
+    const getReservationsFiltered = async (filter) => {
+        if (filter==""){
+            const reservations = await userService.getApartados();
+            setReservations(reservations);
+            console.log(reservations);
+        }
+        else{
+            const reservations = await userService.getApartadosNumber(filter);
+            setReservations(reservations);
+            console.log(reservations);
+        }
+      };
+
     useFocusEffect(
       useCallback(() => {
-        getReservations(studentIdentification);
+        getReservations();
         return () => {};
       }, [])
     );
+
+    useFocusEffect(
+        useCallback(() => {
+        getReservationsFiltered(filtro);
+          return () => {};
+        }, [filtro])
+      );
 
 return (
     <SafeAreaView>
       <View style={styles.container}>
         <Text style={styles.title}>Cubículos Apartados</Text>
+        <TextInput
+          style={styles.searchInput}
+          onChangeText={text => setFiltro(text)}
+          value={filtro}
+          keyboardType="numeric"
+          placeholder="Filtrar por cubiculo"
+        />
         <FlatList
           data={reservations}
           renderItem={renderItem}
@@ -64,7 +88,7 @@ return (
         />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("UserMenuScreen", { studentData: studentData })}
+          onPress={() => handleButtonPress("AdminMenuScreen")}
         >
           <Text style={styles.buttonText}>Atras</Text>
         </TouchableOpacity>
@@ -115,7 +139,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   itemText: {
-    fontSize: 18,
+    fontSize: 14,
     alignSelf: "flex-start",
   },
   searchInput: {
@@ -127,4 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default userReservationScreen;
+export default reservationsManagementScreen;

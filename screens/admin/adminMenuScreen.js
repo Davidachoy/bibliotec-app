@@ -36,15 +36,15 @@ const AdminMenuScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("Opción4")}
+          onPress={() => handleButtonPress("ReservationsManagementScreen")}
         >
-          <Text style={styles.buttonText}>Opción 4</Text>
+          <Text style={styles.buttonText}>Gestión de Reservaciones</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("Opción5")}
+          onPress={() => handleButtonPress("Login")}
         >
-          <Text style={styles.buttonText}>Opción 5</Text>
+          <Text style={styles.buttonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
