@@ -153,6 +153,49 @@ const userService = {
       console.error("Error al buscar apartados de usuario: ", error);
       throw error;
     }
+  },
+
+  async getApartados()  {
+    try{
+      const data = await getDocs(reservationsCollectionRef);
+      const apartados = data.docs
+      .map((doc) => ({ ...doc.data(), id: doc.id }))
+      .filter((apartado) => apartado.activa && !apartado.confirmada);
+      console.log(apartados);
+      return apartados;
+    } catch (error) {
+      console.error("Error al buscar apartados de usuario: ", error);
+      throw error;
+    }
+  },
+
+  async getCubiculos()  {
+    try{
+      const data = await getDocs(cubiculosCollectionRef);
+      const cubiculos = data.docs
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter((cubiculos) => !cubiculos.eliminado);
+      console.log(cubiculos)
+      return cubiculos
+    } catch (error) {
+      console.error("Error al buscar los cubiculos: ", error);
+      throw error;
+    }
+  },
+
+
+  async getApartadosNumber(number)  {
+    try{
+      const data = await getDocs(reservationsCollectionRef);
+      const apartados = data.docs
+      .map((doc) => ({ ...doc.data(), id: doc.id }))
+      .filter((apartado) => apartado.activa && !apartado.confirmada && apartado.cubiculo.includes(number));
+      console.log(apartados);
+      return apartados;
+    } catch (error) {
+      console.error("Error al buscar apartados de usuario: ", error);
+      throw error;
+    }
   }
 };
 
