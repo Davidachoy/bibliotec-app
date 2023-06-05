@@ -12,8 +12,9 @@ import userService from "../../services/userService";
 
 const CubiculeDetailScreen = ({ route, navigation }) => {
   const { cubiculeData } = route.params;
-  const handleButtonPress = (route) => {
-    navigation.navigate(route);
+  
+  const handleButtonPress = (route, params) => {
+    navigation.navigate(route, { ...params });
   };
 
   const deleteCubicule= async () => {
@@ -49,7 +50,7 @@ const CubiculeDetailScreen = ({ route, navigation }) => {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("CubiculeDashboardScreen")}
+          onPress={() => navigation.navigate("CubiculeEditScreen")}
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>

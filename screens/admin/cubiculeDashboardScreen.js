@@ -42,7 +42,6 @@ const CubiculeDashboardScreen = ({ navigation }) => {
   const getCubiculos = async () => {
     const cubiculos = await userService.getCubiculos();
     setCubiculos(cubiculos);
-    console.log(cubiculos);
   };
 
   useFocusEffect(

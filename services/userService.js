@@ -12,6 +12,7 @@ import qrcode from 'qrcode';
 import emailjs from 'emailjs-com';
 const usuariosCollectionRef = collection(db, "usuarios");
 const reservationsCollectionRef = collection(db, "reservaciones");
+const cubiculosCollectionRef = collection(db,"cubiculos")
 
 const userService = {
   async signIn(email, password) {
@@ -175,7 +176,6 @@ const userService = {
       const cubiculos = data.docs
         .map((doc) => ({ ...doc.data(), id: doc.id }))
         .filter((cubiculos) => !cubiculos.eliminado);
-      console.log(cubiculos)
       return cubiculos
     } catch (error) {
       console.error("Error al buscar los cubiculos: ", error);
@@ -196,7 +196,29 @@ const userService = {
       console.error("Error al buscar apartados de usuario: ", error);
       throw error;
     }
-  }
-};
+  },
 
+
+async updateCubiculo(numeroCubiculo,capacidad,disponible,tipo){
+
+  try{
+    const cubiculos = doc(db, "cubiculos", numeroCubiculo);
+    const data = {
+      numeroCubiculo: numeroCubiculo,
+      capacidad: capacidad,
+      disponible: disponible,
+      tipo: tipo
+    
+    };
+
+   
+    await updateDoc(cubiculos, data);
+
+  }catch(error){
+    console.error("error al editar el cubiculo",error);
+    throw error
+  }
+}
+
+};
 export default userService;
