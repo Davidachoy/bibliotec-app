@@ -41,7 +41,7 @@ function UserEncuesta({ route, navigation }) {
     };
   
     const getReservations = async (id) => {
-      const reservations = await userService.getApartadosConfirmadosUser;
+      const reservations = await userService.getApartadosConfirmadosUser(id);
       setReservations(reservations);
       console.log(reservations);
     };
