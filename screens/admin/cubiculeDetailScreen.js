@@ -19,9 +19,12 @@ const CubiculeDetailScreen = ({ route, navigation }) => {
   };
 
   const deleteCubicule= async () => {
- // falta de hacer
+    const cubiculeDeleted = userService.deleteCubiculo(cubiculeData.id);
+    if (cubiculeDeleted) {
+      console.log("cubiculo borrado con exito");
+      navigation.navigate("CubiculeDashboardScreen");
+    }
   };
-
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -55,7 +58,7 @@ const CubiculeDetailScreen = ({ route, navigation }) => {
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => deleteStudent()}>
+        <TouchableOpacity style={styles.button} onPress={() => deleteCubicule()}>
           <Text style={styles.buttonText}>Eliminar</Text>
         </TouchableOpacity>
         <TouchableOpacity

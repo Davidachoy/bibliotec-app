@@ -120,6 +120,17 @@ const userService = {
     }
   },
 
+  async deleteCubiculo(id) {
+    try {
+      const usuaroDoc = doc(db, "cubiculos", id);
+      await updateDoc(usuaroDoc, { eliminado: true });
+      return true;
+    } catch (error) {
+      console.error("Error al borrar el cubiculo: ", error);
+    }
+  },
+
+
   async confirmReservation(id) {
     try {
       const usuaroDoc = doc(db, "reservaciones", id);
