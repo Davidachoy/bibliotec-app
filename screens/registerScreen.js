@@ -49,6 +49,9 @@ const RegisterScreen = ({ navigation }) => {
       cedula: cedula,
       fechaNacimiento: fechaNacimiento,
       correo: correo,
+      admin: false,
+      eliminado: false,
+      estado:"Activo",
       contraseña: contraseña,
     });
     navigation.navigate("Login");
@@ -59,7 +62,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || fechaNacimiento;
     setShowDatePicker(false);
-    setFechaNacimiento(currentDate);
+    setFechaNacimiento(currentDate.toISOString().split('T')[0]);
   };
 
   const DateInput = () => {
@@ -70,7 +73,7 @@ const RegisterScreen = ({ navigation }) => {
       >
         <Text style={styles.dateInputText}>
           {fechaNacimiento
-            ? `Fecha de nacimiento: ${fechaNacimiento.toLocaleDateString()}`
+            ? `Fecha de nacimiento: ${fechaNacimiento}`
             : "Seleccionar fecha de nacimiento"}
         </Text>
       </TouchableOpacity>
@@ -115,12 +118,12 @@ const RegisterScreen = ({ navigation }) => {
         <DateInput />
         {showDatePicker && (
           <DateTimePicker
-            value={fechaNacimiento || new Date()}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-            style={{ alignSelf: "center", marginBottom: 10 }}
-          />
+          value={new Date(fechaNacimiento || Date.now())}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+          style={{ alignSelf: "center", marginBottom: 10 }}
+        />
         )}
         <TextInput
           style={styles.input}

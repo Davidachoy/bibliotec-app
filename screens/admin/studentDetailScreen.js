@@ -12,8 +12,8 @@ import userService from "../../services/userService";
 
 const StudentDetailScreen = ({ route, navigation }) => {
   const { studenData } = route.params;
-  const handleButtonPress = (route) => {
-    navigation.navigate(route);
+  const handleButtonPress = (route, params) => {
+    navigation.navigate(route, { ...params });
   };
 
   const deleteStudent = async () => {
@@ -50,7 +50,7 @@ const StudentDetailScreen = ({ route, navigation }) => {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("StudentDashboardScreen")}
+          onPress={() => handleButtonPress("StudentEditScreen", {studenData:studenData})}
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>

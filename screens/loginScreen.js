@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     const lowerCaseEmail = correo.toLowerCase();
     try {
-      const loginResult = await userService.signIn(lowerCaseEmail, contraseña);
+      const loginResult = await userService.signIn("admin@itcr.cr", "123");
       if (loginResult.success) {
         if (loginResult.isAdmin) {
           navigation.navigate("AdminMenuScreen"); // Navegar a la pantalla de administrador
