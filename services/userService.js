@@ -12,6 +12,7 @@ import qrcode from 'qrcode';
 import emailjs from 'emailjs-com';
 const usuariosCollectionRef = collection(db, "usuarios");
 const reservationsCollectionRef = collection(db, "reservaciones");
+const cubiculosCollectionRef = collection(db,"cubiculos");
 
 const userService = {
   async signIn(email, password) {
@@ -155,6 +156,20 @@ const userService = {
     }
   },
 
+  async getApartadosConfirmadosUser(student)  {
+    try{
+      const data = await getDocs(reservationsCollectionRef);
+      const apartados = data.docs
+      .map((doc) => ({ ...doc.data(), id: doc.id }))
+      .filter((apartado) => apartado.activa && apartado.confirmada && apartado.carnee==student);
+      console.log(apartados);
+      return apartados;
+    } catch (error) {
+      console.error("Error al buscar apartados confirmados de usuario: ", error);
+      throw error;
+    }
+  },
+
   async getApartados()  {
     try{
       const data = await getDocs(reservationsCollectionRef);
@@ -169,13 +184,14 @@ const userService = {
     }
   },
 
+
   async getCubiculos()  {
     try{
       const data = await getDocs(cubiculosCollectionRef);
       const cubiculos = data.docs
         .map((doc) => ({ ...doc.data(), id: doc.id }))
         .filter((cubiculos) => !cubiculos.eliminado);
-      console.log(cubiculos)
+      //console.log(cubiculos)
       return cubiculos
     } catch (error) {
       console.error("Error al buscar los cubiculos: ", error);

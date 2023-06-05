@@ -29,7 +29,7 @@ const UserMenuScreen = ({route, navigation}) => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("reserveCubiculeScreen")}
+          onPress={() => handleButtonPress("reserveCubiculeScreen", {studentData: studentData })}
         >
           <Text style={styles.buttonText}>Apartar un Cubículo</Text>
         </TouchableOpacity>
@@ -43,14 +43,14 @@ const UserMenuScreen = ({route, navigation}) => {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("StudentDashboardScreen")}
+          onPress={() => handleButtonPress("UserEncuesta", { studentData: studentData })}
         >
-          <Text style={styles.buttonText}>Mi Cuenta</Text>
+          <Text style={styles.buttonText}>Encuesta Satisfacción</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("StudentDashboardScreen")}
+          onPress={() => handleButtonPress("Login")}
         >
           <Text style={styles.buttonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
