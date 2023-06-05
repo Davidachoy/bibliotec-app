@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { db } from "../database/firebase-config";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs, where, query } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import userService from "../services/userService";
@@ -22,10 +22,35 @@ const RegisterScreen = ({ navigation }) => {
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
-
+  const email = "estudiantec.cr";
+  const emailRegex = new RegExp("^[A-Za-z0-9._%+-]+@" + email + "$");
+  const passwordRegex = new RegExp(
+    "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$"
+  );
   const usuariosCollectionRef = collection(db, "usuarios");
   const [errorMessage, setErrorMessage] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const checkEmails = async (email) => {
+    const querySnapshot = await getDocs(
+      query(collection(db, "usuarios"), where("correo", "==", email))
+    );
+    return !querySnapshot.empty;
+  };
+
+  const checkCarnee = async (carnee) => {
+    const querySnapshot = await getDocs(
+      query(collection(db, "usuarios"), where("carnee", "==", carnee))
+    );
+    return !querySnapshot.empty;
+  };
+
+  const checkCedula = async (cedula) => {
+    const querySnapshot = await getDocs(
+      query(collection(db, "usuarios"), where("cedula", "==", cedula))
+    );
+    return !querySnapshot.empty;
+  };
 
   const handleRegister = async () => {
     if (
@@ -41,17 +66,38 @@ const RegisterScreen = ({ navigation }) => {
       setErrorMessage("Por favor, complete todos los campos.");
       return;
     }
-    await addDoc(usuariosCollectionRef, {
-      nombre: nombre,
-      apellido: apellido,
-      segundoApellido: segundoApellido,
-      carnee: carnee,
-      cedula: cedula,
-      fechaNacimiento: fechaNacimiento,
-      correo: correo,
-      contraseña: contraseña,
-    });
-    navigation.navigate("Login");
+    const repeatedEmail = await checkEmails(correo);
+    const repeatedCarnee = await checkCarnee(carnee);
+    const repeatedCedula = await checkCedula(cedula);
+
+    if (!emailRegex.test(correo)) {
+      alert("Solo se permiten correos con el dominio estudiantec.cr");
+    } else if (!passwordRegex.test(contraseña)) {
+      alert(
+        "La constraseña no cumple con el formato solicitado, debe tener un mínimo de 8 carácteres, una mayúscula y minúscula y un carácter especial #?!@$%^&*-_"
+      );
+    } else if (repeatedEmail) {
+      alert("Ya existe una cuenta con ese correo registrada");
+    } else if (repeatedCarnee) {
+      alert("Ya existe este carnee");
+    } else if (repeatedCedula) {
+      alert("Ya existe esta cedula");
+    } else {
+      await addDoc(usuariosCollectionRef, {
+        nombre: nombre,
+        apellido: apellido,
+        segundoApellido: segundoApellido,
+        carnee: carnee,
+        cedula: cedula,
+        fechaNacimiento: fechaNacimiento,
+        correo: correo,
+        admin: false,
+        eliminado: false,
+        estado: "Activo",
+        contraseña: contraseña,
+      });
+      navigation.navigate("Login");
+    }
   };
   const handleReturn = () => {
     navigation.navigate("Login");
@@ -59,7 +105,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || fechaNacimiento;
     setShowDatePicker(false);
-    setFechaNacimiento(currentDate);
+    setFechaNacimiento(currentDate.toISOString().split("T")[0]);
   };
 
   const DateInput = () => {
@@ -70,7 +116,7 @@ const RegisterScreen = ({ navigation }) => {
       >
         <Text style={styles.dateInputText}>
           {fechaNacimiento
-            ? `Fecha de nacimiento: ${fechaNacimiento.toLocaleDateString()}`
+            ? `Fecha de nacimiento: ${fechaNacimiento}`
             : "Seleccionar fecha de nacimiento"}
         </Text>
       </TouchableOpacity>
@@ -115,7 +161,7 @@ const RegisterScreen = ({ navigation }) => {
         <DateInput />
         {showDatePicker && (
           <DateTimePicker
-            value={fechaNacimiento || new Date()}
+            value={new Date(fechaNacimiento || Date.now())}
             mode="date"
             display="default"
             onChange={handleDateChange}

@@ -8,8 +8,8 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import qrcode from 'qrcode';
-import emailjs from 'emailjs-com';
+import qrcode from "qrcode";
+import emailjs from "emailjs-com";
 const usuariosCollectionRef = collection(db, "usuarios");
 const reservationsCollectionRef = collection(db, "reservaciones");
 const cubiculosCollectionRef = collection(db,"cubiculos");
@@ -81,11 +81,17 @@ const userService = {
       var user = {};
       const data = await getDocs(usuariosCollectionRef);
       const usuarios = data.docs
-      .map((doc) => ({ ...doc.data(), id: doc.id }))
-      .filter((user) => !user.eliminado);
-      for(let i in usuarios){
-        if (usuarios[i].correo == email && usuarios[i].contraseña == password){
-          user = {id: usuarios[i].id, nombre: usuarios[i].nombre, apellido1: usuarios[i].apellido, apellido2: usuarios[i].segundoApellido, carnee: usuarios[i].carnee};
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter((user) => !user.eliminado);
+      for (let i in usuarios) {
+        if (usuarios[i].correo == email && usuarios[i].contraseña == password) {
+          user = {
+            id: usuarios[i].id,
+            nombre: usuarios[i].nombre,
+            apellido1: usuarios[i].apellido,
+            apellido2: usuarios[i].segundoApellido,
+            carnee: usuarios[i].carnee,
+          };
           break;
         }
       }
@@ -114,6 +120,17 @@ const userService = {
     }
   },
 
+  async deleteCubiculo(id) {
+    try {
+      const usuaroDoc = doc(db, "cubiculos", id);
+      await updateDoc(usuaroDoc, { eliminado: true });
+      return true;
+    } catch (error) {
+      console.error("Error al borrar el cubiculo: ", error);
+    }
+  },
+
+
   async confirmReservation(id) {
     try {
       const usuaroDoc = doc(db, "reservaciones", id);
@@ -124,7 +141,15 @@ const userService = {
     }
   },
 
-  async sendEmail(qrcodeData,hora,horaFinal,cubiculo,fecha,nombre,correo) {
+  async sendEmail(
+    qrcodeData,
+    hora,
+    horaFinal,
+    cubiculo,
+    fecha,
+    nombre,
+    correo
+  ) {
     const emailParams = {
       to_name: nombre,
       qrimagen: qrcodeData,
@@ -132,22 +157,36 @@ const userService = {
       hora: hora,
       horaFinal: horaFinal,
       cubiculo: cubiculo,
-      fecha: fecha
+      fecha: fecha,
     };
-    emailjs.send("service_719vdkn", "template_6rmafow",emailParams, "NUDhBCc5PbaQ9mPz3")
-    .then(function(response) {
-        console.log("SUCCESS", response);
-    }, function(error) {
-        console.log("FAILED", error);
-    });
+    emailjs
+      .send(
+        "service_719vdkn",
+        "template_6rmafow",
+        emailParams,
+        "NUDhBCc5PbaQ9mPz3"
+      )
+      .then(
+        function (response) {
+          console.log("SUCCESS", response);
+        },
+        function (error) {
+          console.log("FAILED", error);
+        }
+      );
   },
 
-  async getApartadosUser(student)  {
-    try{
+  async getApartadosUser(student) {
+    try {
       const data = await getDocs(reservationsCollectionRef);
       const apartados = data.docs
-      .map((doc) => ({ ...doc.data(), id: doc.id }))
-      .filter((apartado) => apartado.activa && !apartado.confirmada && apartado.carnee==student);
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter(
+          (apartado) =>
+            apartado.activa &&
+            !apartado.confirmada &&
+            apartado.carnee == student
+        );
       console.log(apartados);
       return apartados;
     } catch (error) {
@@ -174,8 +213,8 @@ const userService = {
     try{
       const data = await getDocs(reservationsCollectionRef);
       const apartados = data.docs
-      .map((doc) => ({ ...doc.data(), id: doc.id }))
-      .filter((apartado) => apartado.activa && !apartado.confirmada);
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter((apartado) => apartado.activa && !apartado.confirmada);
       console.log(apartados);
       return apartados;
     } catch (error) {
@@ -199,20 +238,112 @@ const userService = {
     }
   },
 
-
-  async getApartadosNumber(number)  {
-    try{
+  async getApartadosNumber(number) {
+    try {
       const data = await getDocs(reservationsCollectionRef);
       const apartados = data.docs
-      .map((doc) => ({ ...doc.data(), id: doc.id }))
-      .filter((apartado) => apartado.activa && !apartado.confirmada && apartado.cubiculo.includes(number));
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter(
+          (apartado) =>
+            apartado.activa &&
+            !apartado.confirmada &&
+            apartado.cubiculo.includes(number)
+        );
       console.log(apartados);
       return apartados;
     } catch (error) {
       console.error("Error al buscar apartados de usuario: ", error);
       throw error;
     }
-  }
-};
+  },
+  async editStudent(studentData) {
+    const { id, carnee, cedula, correo } = studentData;
+    const email = "estudiantec.cr";
+    const emailRegex = new RegExp("^[A-Za-z0-9._%+-]+@" + email + "$");
+    const datos = await getDocs(usuariosCollectionRef);
+    const usuarios = datos.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    const usuario = doc(db, "usuarios", id);
 
+    if (!emailRegex.test(correo)) {
+      alert("Solo se permiten correos con el dominio estudiantec.cr");
+    } else {
+      let error = false;
+      for (let i in usuarios) {
+        console.log(usuarios[i].id);
+        console.log(id);
+
+        if (
+          (usuarios[i].correo == correo ||
+            usuarios[i].cedula == cedula ||
+            usuarios[i].carnee == carnee) &&
+            usuarios[i].id != id
+        ) {
+          console.log("Conflicto con usuario: ", usuarios[i]);
+          console.log(typeof (usuarios[i]))
+
+          console.log("mi usuario: ", id);
+          console.log(typeof (id))
+
+
+
+          error = true;
+        }
+      }
+      if (error) {
+        alert(
+          "Alguno de los siguientes datos coincide con los de otro usuario:\n-Correo Institucional\n-Carnee Estudiantil\n-Cedula"
+        );
+        return 0;
+      } else {
+        await updateDoc(usuario, studentData);
+        return 1;
+      }
+    }
+  },
+
+
+async updateCubiculo(cubiculeData){
+
+  const { id, numeroCubiculo, capacidad, disponible } = cubiculeData;
+  const cubiculo = doc(db, "cubiculos",id);
+ 
+     if (!/^\d+$/.test(numeroCubiculo)) {
+      alert("El número de cubículo solo debe contener números.");
+      return 0;
+    }
+
+    if ((0>numeroCubiculo)) {
+      alert("El número de cubículo  debe ser positivo.");
+      return 0;
+    }
+
+    if ((0>capacidad)) {
+      alert("El número de capacidad debe de ser positivos.");
+      return 0;
+    }
+
+    if (capacidad<=0 || capacidad>10){
+        alert("El número de capacidad mínimo es 1 y máximo 10.");
+        return 0;
+    }
+    if(disponible !== 'Disponible' && disponible !== 'Mantenimiento' && disponible !== 'Ocupado'){
+        alert("El estado solo puede ser Disponible,Mantenimiento u Ocupado")
+        return 0;
+    }
+
+    if(numeroCubiculo == null || ""){
+    alert("El campo de número de cubículo no puede estar vacío")
+    return 0;
+    }
+    else{
+    const cubiculo = doc(db, "cubiculos",id);
+    await updateDoc(cubiculo, cubiculeData);
+    console.log("cubiculo data");
+    console.log(cubiculeData);
+    console.log("ID:"+ id);
+    return 1;
+    }
+  }
+
+};
 export default userService;
