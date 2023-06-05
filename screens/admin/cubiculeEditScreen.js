@@ -8,6 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import userService from "../../services/userService";
+
 const CubiculeEditScreen = ({ route, navigation }) => {
   const { cubiculeData } = route.params;
   console.log("ASDADADADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
@@ -36,14 +37,20 @@ const CubiculeEditScreen = ({ route, navigation }) => {
   const handleTipoChange = (text) => {
     setTipo(text);
   };
-
-  const guardarCambios = async () => {
-
-    const cubiculos = await userService.updateCubiculo(numeroCubiculo,capacidad,disponible,tipo);
-
-    // Lógica para guardar los nuevos datos en tu base de datos o enviarlos a una API
-
-    console.log("Nuevos datos guardados:", nuevosDatos);
+  const update = async () => {
+    const data = {
+            id: cubiculeData.id,
+            numeroCubiculo,
+            tipo,
+            capacidad,
+            disponible,
+            eliminado: cubiculeData.eliminado,
+            maximoTiempoUso: cubiculeData.maximoTiempoUso,
+          };
+    const cubiculeEdited = await userService.updateCubiculo(data);
+    if (cubiculeEdited == 1) {
+      navigation.navigate("CubiculeDetailScreen", { cubiculeData: data });
+    }
   };
 
   return (
@@ -86,7 +93,7 @@ const CubiculeEditScreen = ({ route, navigation }) => {
           onChangeText={handleTipoChange}
           style={styles.input}
         />
-        <TouchableOpacity style={styles.button} onPress={guardarCambios}>
+        <TouchableOpacity style={styles.button} onPress={update}>
           <Text style={styles.buttonText}>Guardar</Text>
         </TouchableOpacity>
         <TouchableOpacity

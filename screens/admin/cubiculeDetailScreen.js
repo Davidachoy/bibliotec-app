@@ -8,6 +8,7 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
+
 import userService from "../../services/userService";
 
 const CubiculeDetailScreen = ({ route, navigation }) => {
@@ -50,7 +51,7 @@ const CubiculeDetailScreen = ({ route, navigation }) => {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate("CubiculeEditScreen")}
+          onPress={() => handleButtonPress("CubiculeEditScreen", {cubiculeData:cubiculeData})}
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>

@@ -14,7 +14,8 @@ import StudentDetailScreen from "./screens/admin/studentDetailScreen";
 import StudentDashboardScreen from "./screens/admin/studentDashboardScreen";
 import CubiculeDashboardScreen from "./screens/admin/cubiculeDashboardScreen";
 import CubiculeDetailScreen from "./screens/admin/cubiculeDetailScreen";
-import StudentEditScreen from "./screens/admin/studentEditScreen";
+import CubiculeEditScreen from "./screens/admin/cubiculeEditScreen";
+
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -99,7 +100,7 @@ export default function App() {
           }}
           
           />
-             <Stack.Screen
+            <Stack.Screen
           name="CubiculeDetailScreen"
           component={CubiculeDetailScreen}
           options={{
@@ -107,9 +108,9 @@ export default function App() {
           }}
           
           />
-          <Stack.Screen
-          name="StudentEditScreen"
-          component={StudentEditScreen}
+            <Stack.Screen
+          name="CubiculeEditScreen"
+          component={CubiculeEditScreen}
           options={{
             headerShown: false,
           }}

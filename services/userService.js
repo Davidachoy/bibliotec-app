@@ -12,6 +12,7 @@ import qrcode from "qrcode";
 import emailjs from "emailjs-com";
 const usuariosCollectionRef = collection(db, "usuarios");
 const reservationsCollectionRef = collection(db, "reservaciones");
+const cubiculosCollectionRef = collection(db,"cubiculos")
 
 const userService = {
   async signIn(email, password) {
@@ -203,7 +204,6 @@ const userService = {
       const cubiculos = data.docs
         .map((doc) => ({ ...doc.data(), id: doc.id }))
         .filter((cubiculos) => !cubiculos.eliminado);
-      console.log(cubiculos);
       return cubiculos;
     } catch (error) {
       console.error("Error al buscar los cubiculos: ", error);
@@ -273,6 +273,50 @@ const userService = {
       }
     }
   },
-};
 
+
+async updateCubiculo(cubiculeData){
+
+  const { id, numeroCubiculo, capacidad, disponible } = cubiculeData;
+  const cubiculo = doc(db, "cubiculos",id);
+ 
+     if (!/^\d+$/.test(numeroCubiculo)) {
+      alert("El número de cubículo solo debe contener números.");
+      return 0;
+    }
+
+    if ((0>numeroCubiculo)) {
+      alert("El número de cubículo  debe ser positivo.");
+      return 0;
+    }
+
+    if ((0>capacidad)) {
+      alert("El número de capacidad debe de ser positivos.");
+      return 0;
+    }
+
+    if (capacidad<=0 || capacidad>10){
+        alert("El número de capacidad mínimo es 1 y máximo 10.");
+        return 0;
+    }
+    if(disponible !== 'Disponible' && disponible !== 'Mantenimiento' && disponible !== 'Ocupado'){
+        alert("El estado solo puede ser Disponible,Mantenimiento u Ocupado")
+        return 0;
+    }
+
+    if(numeroCubiculo == null || ""){
+    alert("El campo de número de cubículo no puede estar vacío")
+    return 0;
+    }
+    else{
+    const cubiculo = doc(db, "cubiculos",id);
+    await updateDoc(cubiculo, cubiculeData);
+    console.log("cubiculo data");
+    console.log(cubiculeData);
+    console.log("ID:"+ id);
+    return 1;
+    }
+  }
+
+};
 export default userService;
