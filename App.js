@@ -12,6 +12,8 @@ import UserReservationsScreen from "./screens/user/userReservationsScreen";
 import UserReservationInfoScreen from "./screens/user/userReservationInfoScreen";
 import StudentDetailScreen from "./screens/admin/studentDetailScreen";
 import StudentDashboardScreen from "./screens/admin/studentDashboardScreen";
+import CubiculeDashboardScreen from "./screens/admin/cubiculeDashboardScreen";
+import CubiculeDetailScreen from "./screens/admin/cubiculeDetailScreen";
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -87,6 +89,23 @@ export default function App() {
             headerShown: false,
           }}
         />
+        
+        <Stack.Screen
+          name="CubiculeDashboardScreen"
+          component={CubiculeDashboardScreen}
+          options={{
+            headerShown: false,
+          }}
+          
+          />
+             <Stack.Screen
+          name="CubiculeDetailScreen"
+          component={CubiculeDetailScreen}
+          options={{
+            headerShown: false,
+          }}
+          
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );
