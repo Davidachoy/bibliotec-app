@@ -35,6 +35,7 @@ const LoginScreen = ({ navigation }) => {
           navigation.navigate("UserMenuScreen",{ studentData: data }); // Navegar a la pantalla de cliente
         }
       } else {
+        alert('Error al iniciar sesión');
       }
     } catch (error) {
       console.error("Error al iniciar sesión: ", error);
