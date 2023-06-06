@@ -10,6 +10,8 @@ import {
 import { db } from "../database/firebase-config";
 import { addDoc, collection, getDocs, where, query } from "firebase/firestore";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import emailjs from 'emailjs-com';
+
 
 import userService from "../services/userService";
 
@@ -95,6 +97,19 @@ const RegisterScreen = ({ navigation }) => {
         eliminado: false,
         estado: "Activo",
         contraseña: contraseña,
+      });
+      const name = `${nombre} ${apellido} ${segundoApellido}`;
+      const msg = `Bienvenido al servicio de reservacion de cubículos de la biblioteca Jose Figueres Ferrer`;
+      const emailParams = {
+        to_name: name,
+        cliente: correo,
+        message: msg
+      };
+      emailjs.send("service_719vdkn","template_7eaotzc",emailParams, "NUDhBCc5PbaQ9mPz3")
+      .then(function(response) {
+      console.log("SUCCESS", response);
+      }, function(error) {
+      console.log("FAILED", error);
       });
       navigation.navigate("Login");
     }
