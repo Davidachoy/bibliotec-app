@@ -16,10 +16,13 @@ import reserveCubiculeScreen from "./screens/user/reserveCubiculeScreen";
 
 import CubiculeDashboardScreen from "./screens/admin/cubiculeDashboardScreen";
 import CubiculeDetailScreen from "./screens/admin/cubiculeDetailScreen";
-
+import StudentEditScreen from "./screens/admin/studentEditScreen";
+import TimeUsageManager from "./screens/admin/TimeUsageManager";
+import TimeManagerDetail from "./screens/admin/TimeManagerDetail";
 import UserEncuesta from "./screens/user/userEncuesta";
 import CubiculeEditScreen from "./screens/admin/cubiculeEditScreen";
-import UserEncuestaInfoScreen from "./screens/user/userEncuestaInfoSreen";
+
+import BlockCubicule from "./screens/admin/BlockCubicule";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -36,6 +39,27 @@ export default function App() {
         <Stack.Screen
           name="AdminMenuScreen"
           component={AdminMenuScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="BlockCubicule"
+          component={BlockCubicule}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="TimeManagerDetail"
+          component={TimeManagerDetail}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="StudentEditScreen"
+          component={StudentEditScreen}
           options={{
             headerShown: false,
           }}
@@ -103,31 +127,28 @@ export default function App() {
             headerShown: false,
           }}
         />
-        
+
         <Stack.Screen
           name="CubiculeDashboardScreen"
           component={CubiculeDashboardScreen}
           options={{
             headerShown: false,
           }}
-          
-          />
-            <Stack.Screen
+        />
+        <Stack.Screen
           name="CubiculeDetailScreen"
           component={CubiculeDetailScreen}
           options={{
             headerShown: false,
           }}
-          
-          />
-            <Stack.Screen
+        />
+        <Stack.Screen
           name="CubiculeEditScreen"
           component={CubiculeEditScreen}
           options={{
             headerShown: false,
           }}
-          
-          />
+        />
 
         <Stack.Screen
           name="UserEncuesta"
@@ -135,16 +156,14 @@ export default function App() {
           options={{
             headerShown: false,
           }}
-          
-          />
-
+        />
         <Stack.Screen
-          name="UserEncuestaInfoScreen"
-          component={UserEncuestaInfoScreen}
+          name="TimeUsageManager"
+          component={TimeUsageManager}
           options={{
             headerShown: false,
           }}
-          />
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

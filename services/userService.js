@@ -12,7 +12,7 @@ import qrcode from "qrcode";
 import emailjs from "emailjs-com";
 const usuariosCollectionRef = collection(db, "usuarios");
 const reservationsCollectionRef = collection(db, "reservaciones");
-const cubiculosCollectionRef = collection(db,"cubiculos");
+const cubiculosCollectionRef = collection(db, "cubiculos");
 
 const userService = {
   async signIn(email, password) {
@@ -130,7 +130,6 @@ const userService = {
     }
   },
 
-
   async confirmReservation(id) {
     try {
       const usuaroDoc = doc(db, "reservaciones", id);
@@ -195,22 +194,28 @@ const userService = {
     }
   },
 
-  async getApartadosConfirmadosUser(student)  {
-    try{
+  async getApartadosConfirmadosUser(student) {
+    try {
       const data = await getDocs(reservationsCollectionRef);
       const apartados = data.docs
-      .map((doc) => ({ ...doc.data(), id: doc.id }))
-      .filter((apartado) => apartado.activa && apartado.confirmada && apartado.carnee==student);
+        .map((doc) => ({ ...doc.data(), id: doc.id }))
+        .filter(
+          (apartado) =>
+            apartado.activa && apartado.confirmada && apartado.carnee == student
+        );
       console.log(apartados);
       return apartados;
     } catch (error) {
-      console.error("Error al buscar apartados confirmados de usuario: ", error);
+      console.error(
+        "Error al buscar apartados confirmados de usuario: ",
+        error
+      );
       throw error;
     }
   },
 
-  async getApartados()  {
-    try{
+  async getApartados() {
+    try {
       const data = await getDocs(reservationsCollectionRef);
       const apartados = data.docs
         .map((doc) => ({ ...doc.data(), id: doc.id }))
@@ -223,15 +228,14 @@ const userService = {
     }
   },
 
-
-  async getCubiculos()  {
-    try{
+  async getCubiculos() {
+    try {
       const data = await getDocs(cubiculosCollectionRef);
       const cubiculos = data.docs
         .map((doc) => ({ ...doc.data(), id: doc.id }))
         .filter((cubiculos) => !cubiculos.eliminado);
       //console.log(cubiculos)
-      return cubiculos
+      return cubiculos;
     } catch (error) {
       console.error("Error al buscar los cubiculos: ", error);
       throw error;
@@ -276,15 +280,13 @@ const userService = {
           (usuarios[i].correo == correo ||
             usuarios[i].cedula == cedula ||
             usuarios[i].carnee == carnee) &&
-            usuarios[i].id != id
+          usuarios[i].id != id
         ) {
           console.log("Conflicto con usuario: ", usuarios[i]);
-          console.log(typeof (usuarios[i]))
+          console.log(typeof usuarios[i]);
 
           console.log("mi usuario: ", id);
-          console.log(typeof (id))
-
-
+          console.log(typeof id);
 
           error = true;
         }
@@ -301,49 +303,56 @@ const userService = {
     }
   },
 
+  async updateCubiculo(cubiculeData) {
+    const { id, numeroCubiculo, capacidad, disponible, maximoTiempoUso } =
+      cubiculeData;
+    const cubiculo = doc(db, "cubiculos", id);
 
-async updateCubiculo(cubiculeData){
-
-  const { id, numeroCubiculo, capacidad, disponible } = cubiculeData;
-  const cubiculo = doc(db, "cubiculos",id);
- 
-     if (!/^\d+$/.test(numeroCubiculo)) {
+    if (!/^\d+$/.test(numeroCubiculo)) {
       alert("El número de cubículo solo debe contener números.");
       return 0;
     }
-
-    if ((0>numeroCubiculo)) {
+    console.log(parseInt(maximoTiempoUso));
+    if (!(parseInt(maximoTiempoUso) >= 0 && parseInt(maximoTiempoUso) <= 100)) {
+      alert(
+        "El maximo tiempo de uso de cubículo debe ser positivo y menor que 100."
+      );
+      return 0;
+    }
+    if (0 > numeroCubiculo) {
       alert("El número de cubículo  debe ser positivo.");
       return 0;
     }
 
-    if ((0>capacidad)) {
+    if (0 > capacidad) {
       alert("El número de capacidad debe de ser positivos.");
       return 0;
     }
 
-    if (capacidad<=0 || capacidad>10){
-        alert("El número de capacidad mínimo es 1 y máximo 10.");
-        return 0;
+    if (capacidad <= 0 || capacidad > 10) {
+      alert("El número de capacidad mínimo es 1 y máximo 10.");
+      return 0;
     }
-    if(disponible !== 'Disponible' && disponible !== 'Mantenimiento' && disponible !== 'Ocupado'){
-        alert("El estado solo puede ser Disponible,Mantenimiento u Ocupado")
-        return 0;
+    if (
+      disponible !== "Disponible" &&
+      disponible !== "Mantenimiento" &&
+      disponible !== "Ocupado"
+    ) {
+      alert("El estado solo puede ser Disponible,Mantenimiento u Ocupado");
+      return 0;
     }
 
-    if(numeroCubiculo == null || ""){
-    alert("El campo de número de cubículo no puede estar vacío")
-    return 0;
+    if (numeroCubiculo == null || "") {
+      alert("El campo de número de cubículo no puede estar vacío");
+      return 0;
+    } else {
+      const cubiculo = doc(db, "cubiculos", id);
+      await updateDoc(cubiculo, cubiculeData);
+      console.log("cubiculo data");
+      console.log(cubiculeData);
+      console.log("ID:" + id);
+      return 1;
     }
-    else{
-    const cubiculo = doc(db, "cubiculos",id);
-    await updateDoc(cubiculo, cubiculeData);
-    console.log("cubiculo data");
-    console.log(cubiculeData);
-    console.log("ID:"+ id);
-    return 1;
-    }
-  }
-
+  },
 };
 export default userService;
