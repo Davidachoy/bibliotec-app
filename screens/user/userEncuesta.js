@@ -32,7 +32,7 @@ function UserEncuesta({ route, navigation }) {
         cubiculo={item.cubiculo}
         fecha={((item.hora).toDate()).toLocaleDateString()}
         onPress={() =>
-          navigation.navigate("UserReservationInfoScreen", { studentData: studentData ,reservationData: item })
+          navigation.navigate("UserEncuestaInfoScreen", { studentData: studentData ,reservationData: item })
         }
       />
     );

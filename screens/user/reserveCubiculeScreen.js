@@ -11,6 +11,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { Button, NativeBaseProvider } from "native-base";
 import DatePicker from 'react-native-datepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   addDoc,
   collection,
@@ -41,7 +42,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
     const nombreEstudiante= nombre+" "+apellido;
 
 
-    const [newFecha, setFecha] = useState("");
+    const [newFecha, setFecha] = useState(new Date());
     const [searchInputCapacidad, setSearchInputCapacidad] = useState("");
     const [searchInputSE, setSearchInputSE] = useState(""); 
     
@@ -276,8 +277,33 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
     const handleButtonVolver = (route, params) => {
       navigation.navigate(route, { ...params });
     };
-    
 
+
+    const [showPicker, setShowPicker] = useState(false);
+
+    const handleDateChange = (event, date) => {
+      setShowPicker(false);
+      if (date !== undefined) {
+        setFecha(date);
+        console.log(newFecha.toISOString().split('T')[0].replace(/-/g, '/'));
+      }
+    };
+
+    const showDatePicker = () => {
+      setShowPicker(true);
+    };
+    
+/*<DateTimePicker 
+              style={{ width: 200, marginBottom: 10 }}
+              date={newFecha.toISOString()}
+              mode="date"
+              placeholder="Seleccionar fecha"
+              format="YYYY-MM-DD"
+              minDate="2020-01-01"
+              maxDate="2023-12-31"
+              onDateChange={date => setFecha(date)}
+            /> */
+            
 
     return (
     <NativeBaseProvider>  
@@ -285,16 +311,15 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             <Text style={styles.title}>Reservar Cubículo</Text>
 
-            <DatePicker 
-              style={{ width: 200, marginBottom: 10 }}
-              date={newFecha}
-              mode="date"
-              placeholder="Seleccionar fecha"
-              format="YYYY-MM-DD"
-              minDate="2020-01-01"
-              maxDate="2023-12-31"
-              onDateChange={date => setFecha(date)}
-            />
+            <Button style={styles.button} title="Open Date Picker" onPress={showDatePicker} />
+            {showPicker && (
+              <DateTimePicker
+                value={newFecha}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
             
 
             <TextInput
@@ -383,6 +408,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
       padding: 10,
       alignItems: "center",
       marginBottom: 10,
+      color: "white"
     },
     buttonText: {
       color: "white",
