@@ -56,6 +56,10 @@ function UserEncuestaInfoScreen({ route, navigation }) {
       navigation.navigate("UserMenuScreen", { studentData: studentData})
     };
 
+    const handleVolver = () =>{
+      navigation.navigate("UserMenuScreen", { studentData: studentData});
+    };
+
 
     return (
       <SafeAreaView>
@@ -142,6 +146,9 @@ function UserEncuestaInfoScreen({ route, navigation }) {
     
           <TouchableOpacity style={styles.button} onPress={handleGuardar}>
             <Text style={{color: 'white', fontSize: 18}}>Guardar respuestas</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleVolver}>
+            <Text style={{color: 'white', fontSize: 18}}>Volver</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

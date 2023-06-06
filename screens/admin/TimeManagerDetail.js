@@ -9,6 +9,16 @@ import {
   TextInput,
 } from "react-native";
 import userService from "../../services/userService";
+import { db } from "../../database/firebase-config";
+import {
+  getDocs,
+  collection,
+  query,
+  where,
+  doc,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 function TimeManagerDetail({ route, navigation }) {
   const { cubiculeData } = route.params;
@@ -31,14 +41,12 @@ function TimeManagerDetail({ route, navigation }) {
   const update = async () => {
     const data = {
       id: cubiculeData.id,
-      numeroCubiculo: cubiculeData.numeroCubiculo,
-      tipo: cubiculeData.tipo,
-      capacidad: cubiculeData.numeroCubiculo,
       disponible: disponible,
-      eliminado: cubiculeData.eliminado,
       maximoTiempoUso: maximoTiempo,
     };
-    const cubiculeEdited = await userService.updateCubiculo(data);
+    const cubiculo_aux = doc(db, "cubiculos", cubiculeData.id);
+    await updateDoc(cubiculo_aux, data);
+
   };
 
   return (
