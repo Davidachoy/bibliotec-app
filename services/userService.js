@@ -306,53 +306,54 @@ const userService = {
   },
 
   async updateCubiculo(cubiculeData) {
-    const { id, numeroCubiculo, capacidad, disponible, maximoTiempoUso } =
-      cubiculeData;
-    const cubiculo = doc(db, "cubiculos", id);
+    console.log(cubiculeData);
 
-    if (!/^\d+$/.test(numeroCubiculo)) {
+    if (!/^\d+$/.test(cubiculeData.num)) {
       alert("El número de cubículo solo debe contener números.");
       return 0;
     }
-    console.log(parseInt(maximoTiempoUso));
-    if (!(parseInt(maximoTiempoUso) >= 0 && parseInt(maximoTiempoUso) <= 100)) {
-      alert(
-        "El maximo tiempo de uso de cubículo debe ser positivo y menor que 100."
-      );
-      return 0;
-    }
-    if (0 > numeroCubiculo) {
+    if (0 > cubiculeData.num) {
       alert("El número de cubículo  debe ser positivo.");
       return 0;
     }
 
-    if (0 > capacidad) {
+    if (0 > cubiculeData.capacidad) {
       alert("El número de capacidad debe de ser positivos.");
       return 0;
     }
 
-    if (capacidad <= 0 || capacidad > 10) {
+    if (cubiculeData.capacidad <= 0 || cubiculeData.capacidad > 10) {
       alert("El número de capacidad mínimo es 1 y máximo 10.");
       return 0;
     }
     if (
-      disponible !== "Disponible" &&
-      disponible !== "Mantenimiento" &&
-      disponible !== "Ocupado"
+      cubiculeData.disponible !== "Disponible" &&
+      cubiculeData.disponible !== "Mantenimiento" &&
+      cubiculeData.disponible !== "Ocupado"
     ) {
       alert("El estado solo puede ser Disponible,Mantenimiento u Ocupado");
       return 0;
     }
 
-    if (numeroCubiculo == null || "") {
+    if (cubiculeData.num == null || "") {
       alert("El campo de número de cubículo no puede estar vacío");
       return 0;
-    } else {
-      const cubiculo = doc(db, "cubiculos", id);
-      await updateDoc(cubiculo, cubiculeData);
+    }
+    if(cubiculeData.tipo==""){
+      alert("Debe elegir un tipo de servicio especial");
+      return 0;
+    }
+    else {
+      const cubiculo = doc(db, "cubiculos", cubiculeData.id);
+      const data = {
+        numeroCubiculo: cubiculeData.num,
+        capacidad: cubiculeData.capacidad,
+        disponible: cubiculeData.disponible,
+        tipo: cubiculeData.tipo
+      };
+      await updateDoc(cubiculo, data);
       console.log("cubiculo data");
       console.log(cubiculeData);
-      console.log("ID:" + id);
       return 1;
     }
   },
