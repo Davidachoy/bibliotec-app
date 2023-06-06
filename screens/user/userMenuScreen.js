@@ -25,7 +25,7 @@ const UserMenuScreen = ({route, navigation}) => {
     <NativeBaseProvider>
       <SafeAreaView>
       <View style={styles.container}>
-        <Text style={styles.title}>Menú de Administrador</Text>
+        <Text style={styles.title}>Menú de Usuario</Text>
 
         <TouchableOpacity
           style={styles.button}
