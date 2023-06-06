@@ -30,9 +30,9 @@ const AdminMenuScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("Opción3")}
+          onPress={() => handleButtonPress("TimeUsageManager")}
         >
-          <Text style={styles.buttonText}>Opción 3</Text>
+          <Text style={styles.buttonText}>Gestión de Tiempo de uso</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}

@@ -11,8 +11,6 @@ import userService from "../../services/userService";
 
 const CubiculeEditScreen = ({ route, navigation }) => {
   const { cubiculeData } = route.params;
-  console.log("ASDADADADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-  console.log(cubiculeData);
   const [numeroCubiculo, setNumeroCubiculo] = useState(cubiculeData.numeroCubiculo);
   const [capacidad, setCapacidad] = useState(cubiculeData.capacidad);
   const [disponible, setDisponible] = useState(cubiculeData.disponible);
