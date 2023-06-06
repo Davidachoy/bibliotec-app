@@ -22,7 +22,9 @@ import TimeManagerDetail from "./screens/admin/TimeManagerDetail";
 import UserEncuesta from "./screens/user/userEncuesta";
 import CubiculeEditScreen from "./screens/admin/cubiculeEditScreen";
 
+
 import BlockCubicule from "./screens/admin/BlockCubicule";
+import UserEncuestaInfoScreen from "./screens/user/userEncuestaInfoSreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -160,6 +162,13 @@ export default function App() {
         <Stack.Screen
           name="TimeUsageManager"
           component={TimeUsageManager}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="UserEncuestaInfoScreen"
+          component={UserEncuestaInfoScreen}
           options={{
             headerShown: false,
           }}

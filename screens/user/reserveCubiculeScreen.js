@@ -42,7 +42,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
     const nombreEstudiante= nombre+" "+apellido;
 
 
-    const [newFecha, setFecha] = useState(new Date());
+    //const [newFecha, setFecha] = useState(new Date());
     const [searchInputCapacidad, setSearchInputCapacidad] = useState("");
     const [searchInputSE, setSearchInputSE] = useState(""); 
     
@@ -59,6 +59,13 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
 
     const y = hhFinal + ':' + mmFinal;
     console.log(y);
+
+    const [yyyy, setYYYY] = useState('2023');
+    const [mm, setmm] = useState('');
+    const [dd, setdd] = useState('');
+
+    const z = yyyy+'/'+mm+'/'+dd;
+    console.log(z);
 
 
     const Item = ({id,cubiculo, capacidad, servEspeciales, onPress }) => (
@@ -191,8 +198,10 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
       const reservacionesCollectionRef = collection(db, "reservaciones");
 
       // Obtener valor timestamp
+      const newFecha = yyyy+'-'+mm+'-'+dd;
       const newHoraInicio = hhInicio + ':' + mmInicio;
       const newHoraFinal = hhFinal + ':' + mmFinal;
+
       const isoString_start = newFecha + 'T' + newHoraInicio + ':00';
       const isoString_end = newFecha + 'T' + newHoraFinal + ':00';
       const timestamp_start = new Date(isoString_start);
@@ -207,7 +216,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
       const horaFinal_aux= Timestamp.fromMillis(timestampMs_end);  
 
       let flag = false;
-      if(newFecha == "" || hhInicio == "" || mmInicio == "" || hhFinal == "" || mmFinal == ""){
+      if(yyyy == "" || mm == "" || dd == "" || hhInicio == "" || mmInicio == "" || hhFinal == "" || mmFinal == ""){
         flag = true;
       }
 
@@ -281,31 +290,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
     };
 
 
-    const [showPicker, setShowPicker] = useState(false);
-
-    const handleDateChange = (event, date) => {
-      setShowPicker(false);
-      if (date !== undefined) {
-        setFecha(date);
-        console.log(newFecha.toISOString().split('T')[0].replace(/-/g, '/'));
-      }
-    };
-
-    const showDatePicker = () => {
-      setShowPicker(true);
-    };
-    
-/*<DateTimePicker 
-              style={{ width: 200, marginBottom: 10 }}
-              date={newFecha.toISOString()}
-              mode="date"
-              placeholder="Seleccionar fecha"
-              format="YYYY-MM-DD"
-              minDate="2020-01-01"
-              maxDate="2023-12-31"
-              onDateChange={date => setFecha(date)}
-            /> */
-            
+                
 
     return (
     <NativeBaseProvider>  
@@ -313,16 +298,33 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
         <View style={styles.container}>
             <Text style={styles.title}>Reservar Cubículo</Text>
 
-            <Button style={styles.button} title="Open Date Picker" onPress={showDatePicker} />
-            {showPicker && (
-              <DateTimePicker
-                value={newFecha}
-                mode="date"
-                display="default"
-                onChange={handleDateChange}
+            <Text style={styles.label}>Fecha:</Text>
+            <View style={{flexDirection: 'row',alignItems: 'center', marginBottom: 10}}>
+              <TextInput
+                      style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 8, marginRight: 20}}
+                      value={yyyy}
+                      placeholder="Digite Año"
+                      maxLength={4} // Limit the input to 2 characters (hh)
+                      onChangeText={text => setYYYY(text)}
+                      keyboardType="numeric"
               />
-            )}
-            
+              <TextInput
+                      style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 8, marginRight:20}}
+                      value={mm}
+                      placeholder="Digite mes"
+                      maxLength={2} // Limit the input to 2 characters (mm)
+                      onChangeText={text => setmm(text)}
+                      keyboardType="numeric"
+              />
+              <TextInput
+                      style={{ height: 40, borderColor: 'gray', borderWidth: 1, padding: 8}}
+                      value={dd}
+                      placeholder="Digite día"
+                      maxLength={2} // Limit the input to 2 characters (mm)
+                      onChangeText={text => setdd(text)}
+                      keyboardType="numeric"
+              />
+            </View>
 
             <TextInput
                 onChangeText={text => setSearchInputCapacidad(text)}
@@ -346,6 +348,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
                       value={hhInicio}
                       placeholder="Digite horas"
                       maxLength={2} // Limit the input to 2 characters (hh)
+                      keyboardType="numeric"
                       onChangeText={text => sethhInicio(text)}
               />
               <TextInput
@@ -353,6 +356,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
                       value={mmInicio}
                       placeholder="Digite minutos"
                       maxLength={2} // Limit the input to 2 characters (mm)
+                      keyboardType="numeric"
                       onChangeText={text => setmmInicio(text)}
               />
             </View>
@@ -365,6 +369,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
                       value={hhFinal}
                       placeholder="Digite horas"
                       maxLength={2} // Limit the input to 2 characters (hh)
+                      keyboardType="numeric"
                       onChangeText={text => sethhFinal(text)}
               />
               <TextInput
@@ -372,6 +377,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
                       value={mmFinal}
                       placeholder="Digite minutos"
                       maxLength={2} // Limit the input to 2 characters (mm)
+                      keyboardType="numeric"
                       onChangeText={text => setmmFinal(text)}
               />
             </View>

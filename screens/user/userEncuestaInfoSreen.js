@@ -10,15 +10,27 @@ import {
 } from "react-native";
 import userService from "../../services/userService";
 import { useFocusEffect } from "@react-navigation/native";
+import {
+  addDoc,
+  collection,
+  updateDoc,
+  getDocs,
+  getDoc,
+  doc,
+  Timestamp
+} from "firebase/firestore";
+import { db } from "../../database/firebase-config";
 
 function UserEncuestaInfoScreen({ route, navigation }) {
     const [reservations, setReservations] = useState([]);
-    const { studentData } = route.params;
+    const { studentData, reservationData } = route.params;
     const studentID = studentData.id;
-    const studentIdentification = studentData.carnee;
+    const carnee = studentData.carnee;
     const studentName = studentData.nombre;
     const studentLastName = studentData.apellido1;
-    const student2NDLastName = studentData.apellido2
+    const student2NDLastName = studentData.apellido2;
+
+    const cubiculo = reservationData.cubiculo;
   
     const [respuestas, setRespuestas] = useState(Array(5).fill(null));
     const [comentarios, setComentarios] = useState("");
@@ -31,6 +43,17 @@ function UserEncuestaInfoScreen({ route, navigation }) {
 
     const handleGuardar = () => {
         console.log('GUARDADO!', respuestas, comentarios);
+
+        const encuestaCollectionRef = collection(db, "encuesta");
+        const data = {
+          carnee: carnee,
+          comentario: comentarios,
+          cubiculo: cubiculo,
+          respuestas: respuestas
+      };
+      alert("Reservacion realizada exitosamente")
+      addDoc(encuestaCollectionRef, data);
+      navigation.navigate("UserMenuScreen", { studentData: studentData})
     };
 
 
