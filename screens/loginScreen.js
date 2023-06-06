@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = async () => {
     const lowerCaseEmail = correo.toLowerCase();
     try {
-      const loginResult = await userService.signIn("admin@itcr.cr", "123");
+      const loginResult = await userService.signIn(correo, contraseña);
       if (loginResult.success) {
         if (loginResult.isAdmin) {
           navigation.navigate("AdminMenuScreen"); // Navegar a la pantalla de administrador
@@ -29,11 +29,13 @@ const LoginScreen = ({ navigation }) => {
             nombre: estudiante.nombre,
             apellido1: estudiante.apellido1,
             apellido2: estudiante.apellido2,
-            carnee: estudiante.carnee
+            carnee: estudiante.carnee,
+            correo: correo
           };
           navigation.navigate("UserMenuScreen",{ studentData: data }); // Navegar a la pantalla de cliente
         }
       } else {
+        alert('Error al iniciar sesión');
       }
     } catch (error) {
       console.error("Error al iniciar sesión: ", error);
