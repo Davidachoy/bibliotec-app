@@ -133,7 +133,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
         const data = await getDocs(cubiculosCollectionRef);
         const cubiculos = data.docs
           .map((doc) => ({ ...doc.data(), id: doc.id }))
-          .filter((cubiculos) => cubiculos.capacidad);
+          .filter((cubiculos) => cubiculos.capacidad && !cubiculos.eliminado);
         setCubiculos(cubiculos);
       } else {
         const data = await getDocs(cubiculosCollectionRef);
@@ -142,7 +142,8 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
           .filter(
             (cubiculos) =>
             cubiculos.disponible &&
-            cubiculos.capacidad.toString().includes(e)
+            cubiculos.capacidad.toString().includes(e) &&
+            !cubiculos.eliminado
           );
           setCubiculos(cubiculos);
       }
@@ -161,7 +162,7 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
         const data = await getDocs(cubiculosCollectionRef);
         const cubiculos = data.docs
           .map((doc) => ({ ...doc.data(), id: doc.id }))
-          .filter((cubiculos) => cubiculos.tipo);
+          .filter((cubiculos) => cubiculos.tipo && !cubiculos.eliminado);
         setCubiculos(cubiculos);
       } else {
         const data = await getDocs(cubiculosCollectionRef);
@@ -170,7 +171,8 @@ const reserveCubiculeScreen = ({ route, navigation }) => {
           .filter(
             (cubiculos) =>
             cubiculos.disponible &&
-            cubiculos.tipo.toString().includes(e)
+            cubiculos.tipo.toString().includes(e) &&
+            !cubiculos.eliminado
           );
           setCubiculos(cubiculos);
       }
