@@ -29,7 +29,8 @@ const LoginScreen = ({ navigation }) => {
             nombre: estudiante.nombre,
             apellido1: estudiante.apellido1,
             apellido2: estudiante.apellido2,
-            carnee: estudiante.carnee
+            carnee: estudiante.carnee,
+            correo: correo
           };
           navigation.navigate("UserMenuScreen",{ studentData: data }); // Navegar a la pantalla de cliente
         }

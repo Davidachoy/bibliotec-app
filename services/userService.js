@@ -150,6 +150,8 @@ const userService = {
     nombre,
     correo
   ) {
+    console.log('aqui');
+    console.log(qrcodeData);
     const emailParams = {
       to_name: nombre,
       qrimagen: qrcodeData,

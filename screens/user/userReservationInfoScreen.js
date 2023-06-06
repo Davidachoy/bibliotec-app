@@ -29,7 +29,7 @@ const userReservationInfoScreen = ({ route, navigation }) => {
   };
 
   const callEmail = async (qrcodeData,hora,horaFinal,cubiculo,fecha) =>{
-    console.log('enviando');
+    console.log(studentData.correo);
     userService.sendEmail(qrcodeData,hora,horaFinal,cubiculo,fecha,studentData.nombre,studentData.correo);
     navigation.navigate("UserReservationScreen", {studentData: studentData});
   };
