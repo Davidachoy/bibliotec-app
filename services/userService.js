@@ -6,6 +6,7 @@ import {
   query,
   where,
   doc,
+  addDoc,
   updateDoc,
 } from "firebase/firestore";
 import qrcode from "qrcode";
@@ -306,55 +307,128 @@ const userService = {
   },
 
   async updateCubiculo(cubiculeData) {
-    const { id, numeroCubiculo, capacidad, disponible, maximoTiempoUso } =
-      cubiculeData;
-    const cubiculo = doc(db, "cubiculos", id);
+    console.log(cubiculeData);
 
-    if (!/^\d+$/.test(numeroCubiculo)) {
+    if (!/^\d+$/.test(cubiculeData.num)) {
       alert("El número de cubículo solo debe contener números.");
       return 0;
     }
-    console.log(parseInt(maximoTiempoUso));
-    if (!(parseInt(maximoTiempoUso) >= 0 && parseInt(maximoTiempoUso) <= 100)) {
-      alert(
-        "El maximo tiempo de uso de cubículo debe ser positivo y menor que 100."
-      );
-      return 0;
-    }
-    if (0 > numeroCubiculo) {
+    if (0 > cubiculeData.num) {
       alert("El número de cubículo  debe ser positivo.");
       return 0;
     }
 
-    if (0 > capacidad) {
+    if (0 > cubiculeData.capacidad) {
       alert("El número de capacidad debe de ser positivos.");
       return 0;
     }
 
-    if (capacidad <= 0 || capacidad > 10) {
+    if (cubiculeData.capacidad <= 0 || cubiculeData.capacidad > 10) {
       alert("El número de capacidad mínimo es 1 y máximo 10.");
       return 0;
     }
     if (
-      disponible !== "Disponible" &&
-      disponible !== "Mantenimiento" &&
-      disponible !== "Ocupado"
+      cubiculeData.disponible !== "Disponible" &&
+      cubiculeData.disponible !== "Mantenimiento" &&
+      cubiculeData.disponible !== "Ocupado"
     ) {
       alert("El estado solo puede ser Disponible,Mantenimiento u Ocupado");
       return 0;
     }
 
-    if (numeroCubiculo == null || "") {
+    if (cubiculeData.num == null || "") {
       alert("El campo de número de cubículo no puede estar vacío");
       return 0;
-    } else {
-      const cubiculo = doc(db, "cubiculos", id);
-      await updateDoc(cubiculo, cubiculeData);
+    }
+    if(cubiculeData.tipo==""){
+      alert("Debe elegir un tipo de servicio especial");
+      return 0;
+    }
+    else {
+      const cubiculo = doc(db, "cubiculos", cubiculeData.id);
+      const data = {
+        numeroCubiculo: cubiculeData.num,
+        capacidad: cubiculeData.capacidad,
+        disponible: cubiculeData.disponible,
+        tipo: cubiculeData.tipo
+      };
+      await updateDoc(cubiculo, data);
       console.log("cubiculo data");
       console.log(cubiculeData);
-      console.log("ID:" + id);
       return 1;
     }
   },
+
+  async checkIfCubiculoExists (numeroCubiculo) {
+    const querySnapshot = await getDocs(
+      query(collection(db, "cubiculos"), where("numeroCubiculo", "==", numeroCubiculo))
+    );
+    return !querySnapshot.empty;
+  },
+
+  async checkIfEliminado (numeroCubiculo) {
+    const querySnapshot = await getDocs(
+      query(collection(db, "cubiculos"), where("numeroCubiculo", "==", numeroCubiculo), where("eliminado", "==", true))
+    );
+    return !querySnapshot.empty;
+  },
+
+  async addCubiculo(data) {
+    const querySnapshotEliminado = await getDocs(
+      query(collection(db, "cubiculos"), where("numeroCubiculo", "==", data.numeroCubiculo), where("eliminado", "==", true))
+    );
+    const querySnapshotExists = await getDocs(
+      query(collection(db, "cubiculos"), where("numeroCubiculo", "==", data.numeroCubiculo))
+    );
+    const cubiculoExists = !querySnapshotExists.empty;
+    const cubiculoEliminado = !querySnapshotEliminado.empty;
+
+        if (!/^\d+$/.test(data.numeroCubiculo)) {
+            alert("El número de cubículo solo debe contener números.");
+            return 0;
+        }
+        else if (cubiculoExists && !cubiculoEliminado) {
+            alert("El número de cubículo ya existe en la base de datos.");
+            return 0;
+        }
+        else if (data.capacidad<=0 || data.capacidad>10){
+            alert("El número de capacidad mínimo es 1 y máximo 10.");
+            return 0;
+        }
+        else if(data.disponible !== 'Disponible' && data.disponible !== 'Mantenimiento' && data.disponible !== 'Ocupado'){
+            alert("El estado solo puede ser Disponible,Mantenimiento u Ocupado");
+            return 0;
+        }
+
+        else if(data.numeroCubiculo == null || ""){
+         alert("El campo de número de cubículo no puede estar vacío");
+         return 0;
+        }
+        else if (data.tipo === "") {
+          alert("Por favor seleccione al menos una opción de servicios especiales.");
+          return 0;
+        }
+        else {
+            alert("El cubículo fue creado exitosamente")
+
+      if(cubiculoEliminado){
+          const cubiculosDocs = await getDocs(cubiculosCollectionRef);
+          const dataCubiculos = cubiculosDocs.docs.map((doc) => ({ ...doc.data(), id: doc.id}))
+          let idCubiculo = 0;
+          for(let i in dataCubiculos){
+              if(dataCubiculos[i].numeroCubiculo == newNumeroCubiculo){
+                  idCubiculo = dataCubiculos[i].id;
+              }
+          }
+          const cubiculoDOC = doc(db, "cubiculos", idCubiculo);
+          await updateDoc(cubiculoDOC,data);
+      }
+      else{
+          await addDoc(cubiculosCollectionRef, data);
+      }
+      return 1;
+    }
+  }
+
 };
 export default userService;

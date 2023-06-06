@@ -13,7 +13,7 @@ import UserReservationInfoScreen from "./screens/user/userReservationInfoScreen"
 import StudentDetailScreen from "./screens/admin/studentDetailScreen";
 import StudentDashboardScreen from "./screens/admin/studentDashboardScreen";
 import reserveCubiculeScreen from "./screens/user/reserveCubiculeScreen";
-
+import AddCubiculeScreen from "./screens/admin/addCubiculeScreen";
 import CubiculeDashboardScreen from "./screens/admin/cubiculeDashboardScreen";
 import CubiculeDetailScreen from "./screens/admin/cubiculeDetailScreen";
 import StudentEditScreen from "./screens/admin/studentEditScreen";
@@ -111,6 +111,13 @@ export default function App() {
         <Stack.Screen
           name="StudentDashboardScreen"
           component={StudentDashboardScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="AddCubiculeScreen"
+          component={AddCubiculeScreen}
           options={{
             headerShown: false,
           }}

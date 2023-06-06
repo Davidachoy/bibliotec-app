@@ -5,19 +5,16 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  TextInput,
+  TextInput, db
 } from "react-native";
 import Checkbox from 'expo-checkbox';
 import userService from "../../services/userService";
 import { useFocusEffect } from "@react-navigation/native";
 
-const CubiculeEditScreen = ({ route, navigation }) => {
-  const { cubiculeData } = route.params;
-  console.log(cubiculeData);
-  const [numeroCubiculo, setNumeroCubiculo] = useState(cubiculeData.numeroCubiculo);
-  const [capacidad, setCapacidad] = useState(cubiculeData.capacidad);
-  const [disponible, setDisponible] = useState(cubiculeData.disponible);
-  const [tipo, setTipo] = useState(cubiculeData.tipo);
+const AddCubiculeScreen = ({ route, navigation }) => {
+  const [numeroCubiculo, setNumeroCubiculo] = useState("");
+  const [capacidad, setCapacidad] = useState("");
+  const [disponible, setDisponible] = useState("");
   const [isSelected1, setIsSelected1] = useState(false);
   const [isSelected2, setIsSelected2] = useState(false);
   const [isSelected3, setIsSelected3] = useState(false);
@@ -69,27 +66,20 @@ const CubiculeEditScreen = ({ route, navigation }) => {
   const handleTipoChange = (text) => {
     setTipo(text);
   };
-  const update = async () => {
-    const updatedata = {
-            id: cubiculeData.id,
-            num: numeroCubiculo,
-            tipo: stringService,
-            capacidad: capacidad,
-            disponible: disponible
-          };
+  const create = async () => {
     const newCubicule = {
       capacidad: capacidad,
       disponible: disponible,
-      eliminado: cubiculeData.eliminado,
-      id: cubiculeData.id,
-      maximoTiempoUso: cubiculeData.maximoTiempoUso,
+      eliminado: false,
+      maximoTiempoUso: "0",
       numeroCubiculo: numeroCubiculo,
       tipo: stringService
-    }
-    const cubiculeEdited = await userService.updateCubiculo(updatedata);
-    if (cubiculeEdited == 1) {
-      navigation.navigate("CubiculeDetailScreen", { cubiculeData: newCubicule });
-    }
+    };
+    const added = await userService.addCubiculo(newCubicule);
+    navigation.navigate("CubiculeDashboardScreen");
+    if (added == 1) {
+        navigation.navigate("CubiculeDashboardScreen");
+      }
   };
 
   useFocusEffect(
@@ -166,8 +156,8 @@ const CubiculeEditScreen = ({ route, navigation }) => {
           style={styles.checkbox}
         />
         <Text>JAWS</Text>
-        <TouchableOpacity style={styles.button} onPress={update}>
-          <Text style={styles.buttonText}>Guardar</Text>
+        <TouchableOpacity style={styles.button} onPress={create}>
+          <Text style={styles.buttonText}>Crear</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
@@ -180,7 +170,7 @@ const CubiculeEditScreen = ({ route, navigation }) => {
   );
 };
 
-export default CubiculeEditScreen;
+export default AddCubiculeScreen;
 
 const styles = StyleSheet.create({
   container: {
