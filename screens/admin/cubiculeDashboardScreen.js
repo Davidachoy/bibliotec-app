@@ -62,6 +62,12 @@ return (
       />
       <TouchableOpacity
         style={styles.button}
+        onPress={() => handleButtonPress("AddCubiculeScreen")}
+      >
+        <Text style={styles.buttonText}>Crear Cubículo</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => handleButtonPress("AdminMenuScreen")}
       >
         <Text style={styles.buttonText}>Atras</Text>
