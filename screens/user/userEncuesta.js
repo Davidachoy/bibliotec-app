@@ -11,74 +11,68 @@ import {
 import userService from "../../services/userService";
 import { useFocusEffect } from "@react-navigation/native";
 
-const Item = ({ id, numero, disponible, onPress }) => {
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.item}>
-      <Text style={styles.itemText}>Cubiculo# {numero}</Text>
-      <Text style={styles.itemText}>{disponible}</Text>
-    </TouchableOpacity>
-  );
-};
+function UserEncuesta({ route, navigation }) {
+    const [reservations, setReservations] = useState([]);
+    const { studentData } = route.params;
+    const studentID = studentData.id;
+    const studentIdentification = studentData.carnee;
+    const studentName = studentData.nombre;
+    const studentLastName = studentData.apellido1;
+    const student2NDLastName = studentData.apellido2
+  
+    const Item = ({ id, cubiculo, fecha, onPress }) => (
+      <TouchableOpacity onPress={onPress} style={styles.item}>
+        <Text style={styles.itemText}>Cubículo: {cubiculo}</Text>
+        <Text style={styles.itemText}>Fecha: {fecha} </Text>
+      </TouchableOpacity>
+    );
 
-const TimeUsageManager = ({ navigation }) => {
-  const [cubiculos, setCubiculos] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const handleButtonPress = (route) => {
-    navigation.navigate(route);
-  };
-  const renderItem = ({ item }) => {
-    console.log(item);
-    return (
+    const renderItem = ({ item }) => (
       <Item
-        numero={item.numeroCubiculo}
-        disponible={item.disponible}
+        cubiculo={item.cubiculo}
+        fecha={((item.hora).toDate()).toLocaleDateString()}
         onPress={() =>
-          navigation.navigate("TimeManagerDetail", { cubiculeData: item })
+          navigation.navigate("UserReservationInfoScreen", { studentData: studentData ,reservationData: item })
         }
       />
     );
-  };
-
-  const getCubiculos = async () => {
-    const cubiculos = await userService.getCubiculos();
-    const fileredCubiculos = cubiculos.filter((cubiculos) =>
-      cubiculos.numeroCubiculo.includes(searchText)
+    const handleButtonPress = (route, params) => {
+      navigation.navigate(route, { ...params });
+    };
+  
+    const getReservations = async (id) => {
+      const reservations = await userService.getApartadosConfirmadosUser;
+      setReservations(reservations);
+      console.log(reservations);
+    };
+  
+    useFocusEffect(
+      useCallback(() => {
+        getReservations(studentIdentification);
+        return () => {};
+      }, [])
     );
-    setCubiculos(fileredCubiculos);
-  };
 
-  useFocusEffect(
-    useCallback(() => {
-      getCubiculos();
-      return () => {}; // función de limpieza vacía, aquí no es necesario realizar acciones de limpieza
-    }, [searchText])
-  );
-
-  return (
+return (
     <SafeAreaView>
       <View style={styles.container}>
-        <Text style={styles.title}>Gestión de Tiempo de uso</Text>
-        <TextInput // Nuevo componente TextInput
-          style={styles.searchInput}
-          onChangeText={setSearchText}
-          value={searchText}
-          placeholder="Buscar Cubiculo..."
-        />
+        <Text style={styles.title}>Cubículos Apartados</Text>
         <FlatList
-          data={cubiculos}
+          data={reservations}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("AdminMenuScreen")}
+          onPress={() => handleButtonPress("UserMenuScreen", { studentData: studentData })}
         >
           <Text style={styles.buttonText}>Atras</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-};
+}
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -133,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TimeUsageManager;
+export default UserEncuesta;

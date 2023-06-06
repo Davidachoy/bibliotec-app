@@ -42,7 +42,6 @@ const CubiculeDashboardScreen = ({ navigation }) => {
   const getCubiculos = async () => {
     const cubiculos = await userService.getCubiculos();
     setCubiculos(cubiculos);
-    console.log(cubiculos);
   };
 
   useFocusEffect(
@@ -63,7 +62,7 @@ return (
       />
       <TouchableOpacity
         style={styles.button}
-        onPress={() => handleButtonPress()}
+        onPress={() => handleButtonPress("AdminMenuScreen")}
       >
         <Text style={styles.buttonText}>Atras</Text>
       </TouchableOpacity>

@@ -8,18 +8,23 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
+
 import userService from "../../services/userService";
 
 const CubiculeDetailScreen = ({ route, navigation }) => {
   const { cubiculeData } = route.params;
-  const handleButtonPress = (route) => {
-    navigation.navigate(route);
+  
+  const handleButtonPress = (route, params) => {
+    navigation.navigate(route, { ...params });
   };
 
   const deleteCubicule= async () => {
- // falta de hacer
+    const cubiculeDeleted = userService.deleteCubiculo(cubiculeData.id);
+    if (cubiculeDeleted) {
+      console.log("cubiculo borrado con exito");
+      navigation.navigate("CubiculeDashboardScreen");
+    }
   };
-
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -49,11 +54,11 @@ const CubiculeDetailScreen = ({ route, navigation }) => {
         </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleButtonPress("CubiculeDashboardScreen")}
+          onPress={() => handleButtonPress("CubiculeEditScreen", {cubiculeData:cubiculeData})}
         >
           <Text style={styles.buttonText}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => deleteStudent()}>
+        <TouchableOpacity style={styles.button} onPress={() => deleteCubicule()}>
           <Text style={styles.buttonText}>Eliminar</Text>
         </TouchableOpacity>
         <TouchableOpacity
